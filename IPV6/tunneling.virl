@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<topology xmlns="http://www.cisco.com/VIRL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="0.95" xsi:schemaLocation="http://www.cisco.com/VIRL https://raw.github.com/CiscoVIRL/schema/v0.95/virl.xsd">
+    <node name="R1" type="SIMPLE" subtype="IOSv" location="361,216">
+        <interface id="0" name="GigabitEthernet0/1"/>
+    </node>
+    <node name="R2" type="SIMPLE" subtype="IOSv" location="627,216">
+        <interface id="0" name="GigabitEthernet0/1"/>
+    </node>
+    <annotations>
+        <ellipse x="165" y="170" width="184" height="85" fill="00FF00" stroke-width="3"/>
+        <text x="193" y="195" font-size="10" bold="true">IPv6&#xD;
+2001:DB8:CAFE:1::/64</text>
+        <text x="603" y="294" font-size="18"></text>
+        <ellipse x="644" y="166" width="184" height="85" fill="00FF00" stroke-width="3"/>
+        <text x="672" y="194" font-size="10" bold="true">IPv6&#xD;
+2001:DB8:CAFE:2::/64</text>
+        <ellipse x="372" y="171" width="242" height="85" fill="FFFF00" stroke-width="3"/>
+        <text x="455" y="181" font-size="10" bold="true">IPv4 Only&#xD;
+192.168.1.0/30</text>
+    </annotations>
+    <connection dst="/virl:topology/virl:node[2]/virl:interface[1]" src="/virl:topology/virl:node[1]/virl:interface[1]"/>
+</topology>
