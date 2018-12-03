@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <topology xmlns="http://www.cisco.com/VIRL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="0.95" xsi:schemaLocation="http://www.cisco.com/VIRL https://raw.github.com/CiscoVIRL/schema/v0.95/virl.xsd">
-    <node name="iosv-1" type="SIMPLE" subtype="IOSv" location="350,138" ipv4="192.168.0.1">
+    <extensions>
+        <entry key="management_network" type="String">flat</entry>
+    </extensions>
+    <node name="iosv-1" type="SIMPLE" subtype="IOSv" location="471,130" ipv4="192.168.0.1">
         <extensions>
             <entry key="AutoNetkit.IGP" type="String">ospf</entry>
             <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
             <entry key="AutoNetkit.ibgp_role" type="String">Disabled</entry>
             <entry key="AutoNetkit.tunnel_enabled_ipv4" type="Boolean">true</entry>
             <entry key="config" type="String">!
-! Last configuration change at 01:20:52 UTC Thu Nov 29 2018
+! Last configuration change at 16:12:44 UTC Mon Dec 3 2018 by cisco
 !
 version 15.6
 service timestamps debug datetime msec
@@ -60,7 +63,7 @@ multilink bundle-name authenticated
 !
 !
 !
-username cisco privilege 15 secret 5 $1$eADu$qYux9yeIJGYXzK/qdhSEO1
+username cisco privilege 15 secret 5 $1$1S.S$kdJ6bRTT41Sf4R8NA0ion/
 !
 redundancy
 !
@@ -85,29 +88,30 @@ interface Loopback0
 interface GigabitEthernet0/0
  description OOB Management
  vrf forwarding Mgmt-intf
- ip address 10.255.0.6 255.255.0.0
+ ip address 172.16.1.73 255.255.255.0
  duplex full
  speed auto
  media-type rj45
 !
 interface GigabitEthernet0/1
  description to iosv-2
- ip address 10.0.0.1 255.255.255.252
- ip ospf 1 area 55
+ ip address 10.1.0.1 255.255.255.252
  duplex full
  speed auto
  media-type rj45
 !
 interface GigabitEthernet0/2
  description to iosv-3
- ip address 10.0.0.5 255.255.255.252
- ip ospf 1 area 55
+ ip address 10.1.0.5 255.255.255.252
+ ip ospf cost 55555
  duplex full
  speed auto
  media-type rj45
 !
 router ospf 1
  passive-interface Loopback0
+ network 10.1.0.0 0.0.0.1 area 55
+ network 10.1.0.4 0.0.0.1 area 55
  network 192.168.0.1 0.0.0.0 area 0
 !
 ip forward-protocol nd
@@ -115,7 +119,6 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
-ip route 10.0.0.0 255.255.255.248 Null0 254
 ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
 ip ssh server algorithm authentication password
 ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
@@ -169,10 +172,10 @@ end
 
 </entry>
         </extensions>
-        <interface id="0" name="GigabitEthernet0/1" ipv4="10.0.0.1" netPrefixLenV4="30"/>
-        <interface id="1" name="GigabitEthernet0/2" ipv4="10.0.0.5" netPrefixLenV4="30"/>
+        <interface id="0" name="GigabitEthernet0/1" ipv4="10.1.0.1" netPrefixLenV4="30"/>
+        <interface id="1" name="GigabitEthernet0/2" ipv4="10.1.0.5" netPrefixLenV4="30"/>
     </node>
-    <node name="iosv-2" type="SIMPLE" subtype="IOSv" location="236,82" ipv4="192.168.0.9">
+    <node name="iosv-2" type="SIMPLE" subtype="IOSv" location="336,85" ipv4="192.168.0.9">
         <extensions>
             <entry key="AutoNetkit.IGP" type="String">ospf</entry>
             <entry key="AutoNetkit.ospf_area" type="String">55</entry>
@@ -180,7 +183,7 @@ end
             <entry key="AutoNetkit.ibgp_role" type="String">Peer</entry>
             <entry key="AutoNetkit.ASN" type="Integer">65000</entry>
             <entry key="config" type="String">!
-! Last configuration change at 01:22:35 UTC Thu Nov 29 2018
+! Last configuration change at 16:08:55 UTC Mon Dec 3 2018 by cisco
 !
 version 15.6
 service timestamps debug datetime msec
@@ -233,7 +236,7 @@ multilink bundle-name authenticated
 !
 !
 !
-username cisco privilege 15 secret 5 $1$WBCU$/NBSqbqxEccjY2bLseJiZ/
+username cisco privilege 15 secret 5 $1$Niff$2oj9wft/JLhBAWTtRPrUY.
 !
 redundancy
 !
@@ -258,22 +261,21 @@ interface Loopback0
 interface GigabitEthernet0/0
  description OOB Management
  vrf forwarding Mgmt-intf
- ip address 10.255.0.7 255.255.0.0
+ ip address 172.16.1.74 255.255.255.0
  duplex full
  speed auto
  media-type rj45
 !
 interface GigabitEthernet0/1
  description to iosv-1
- ip address 10.0.0.2 255.255.255.252
- ip ospf 1 area 55
+ ip address 10.1.0.2 255.255.255.252
  duplex full
  speed auto
  media-type rj45
 !
 interface GigabitEthernet0/2
  description to iosv-3
- ip address 10.0.0.9 255.255.255.252
+ ip address 10.1.0.9 255.255.255.252
  ip ospf cost 1
  duplex full
  speed auto
@@ -281,38 +283,40 @@ interface GigabitEthernet0/2
 !
 interface GigabitEthernet0/3
  description to iosv-4
- ip address 10.0.0.14 255.255.255.252
+ ip address 10.1.0.14 255.255.255.252
  duplex full
  speed auto
  media-type rj45
 !
 router ospf 65000
+ redistribute bgp 65000 subnets
  passive-interface Loopback0
- network 10.0.0.8 0.0.0.3 area 55
+ network 10.1.0.2 0.0.0.1 area 55
+ network 10.1.0.8 0.0.0.1 area 55
+ network 10.1.0.8 0.0.0.3 area 55
  network 192.168.0.9 0.0.0.0 area 55
-!
-router ospf 1
 !
 router bgp 65000
  bgp router-id 192.168.0.9
  bgp log-neighbor-changes
- neighbor 10.0.0.1 remote-as 1
- neighbor 10.0.0.1 description eBGP to iosv-1
- neighbor 10.0.0.13 remote-as 12000
- neighbor 10.0.0.13 description eBGP to iosv-4
+ neighbor 10.1.0.1 remote-as 1
+ neighbor 10.1.0.1 description eBGP to iosv-1
+ neighbor 10.1.0.13 remote-as 12000
+ neighbor 10.1.0.13 description eBGP to iosv-4
  neighbor 192.168.0.10 remote-as 65000
  neighbor 192.168.0.10 description iBGP peer iosv-3
  neighbor 192.168.0.10 update-source Loopback0
  !
  address-family ipv4
-  network 10.0.0.8 mask 255.255.255.252
+  bgp redistribute-internal
+  network 10.1.0.0 mask 255.255.0.0
   network 192.168.0.9 mask 255.255.255.255
-  neighbor 10.0.0.1 activate
-  neighbor 10.0.0.1 send-community
-  neighbor 10.0.0.1 next-hop-self
-  neighbor 10.0.0.13 activate
-  neighbor 10.0.0.13 send-community
-  neighbor 10.0.0.13 next-hop-self
+  neighbor 10.1.0.1 activate
+  neighbor 10.1.0.1 send-community
+  neighbor 10.1.0.1 next-hop-self
+  neighbor 10.1.0.13 activate
+  neighbor 10.1.0.13 send-community
+  neighbor 10.1.0.13 next-hop-self
   neighbor 192.168.0.10 activate
   neighbor 192.168.0.10 next-hop-self
  exit-address-family
@@ -322,7 +326,7 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
-ip route 10.0.0.8 255.255.255.252 Null0 254
+ip route 10.1.0.0 255.255.0.0 Null0 254
 ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
 ip ssh server algorithm authentication password
 ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
@@ -376,11 +380,11 @@ end
 
 </entry>
         </extensions>
-        <interface id="0" name="GigabitEthernet0/1" ipv4="10.0.0.2" netPrefixLenV4="30"/>
-        <interface id="1" name="GigabitEthernet0/2" ipv4="10.0.0.9" netPrefixLenV4="30"/>
-        <interface id="2" name="GigabitEthernet0/3" ipv4="10.0.0.14" netPrefixLenV4="30"/>
+        <interface id="0" name="GigabitEthernet0/1" ipv4="10.1.0.2" netPrefixLenV4="30"/>
+        <interface id="1" name="GigabitEthernet0/2" ipv4="10.1.0.9" netPrefixLenV4="30"/>
+        <interface id="2" name="GigabitEthernet0/3" ipv4="10.1.0.14" netPrefixLenV4="30"/>
     </node>
-    <node name="iosv-3" type="SIMPLE" subtype="IOSv" location="236,174" ipv4="192.168.0.10">
+    <node name="iosv-3" type="SIMPLE" subtype="IOSv" location="336,177" ipv4="192.168.0.10">
         <extensions>
             <entry key="AutoNetkit.IGP" type="String">ospf</entry>
             <entry key="AutoNetkit.ospf_area" type="String">55</entry>
@@ -388,7 +392,7 @@ end
             <entry key="AutoNetkit.ibgp_role" type="String">Peer</entry>
             <entry key="AutoNetkit.ASN" type="Integer">65000</entry>
             <entry key="config" type="String">!
-! Last configuration change at 01:21:51 UTC Thu Nov 29 2018
+! Last configuration change at 16:10:54 UTC Mon Dec 3 2018 by cisco
 !
 version 15.6
 service timestamps debug datetime msec
@@ -441,7 +445,7 @@ multilink bundle-name authenticated
 !
 !
 !
-username cisco privilege 15 secret 5 $1$xY6W$ZawjeZSKmLO9Z23TjK3A2/
+username cisco privilege 15 secret 5 $1$KT.w$BYBlRDbY77TyfnXKZgMSX1
 !
 redundancy
 !
@@ -466,61 +470,60 @@ interface Loopback0
 interface GigabitEthernet0/0
  description OOB Management
  vrf forwarding Mgmt-intf
- ip address 10.255.0.8 255.255.0.0
+ ip address 172.16.1.75 255.255.255.0
  duplex full
  speed auto
  media-type rj45
 !
 interface GigabitEthernet0/1
  description to iosv-1
- ip address 10.0.0.6 255.255.255.252
- ip ospf 1 area 55
+ ip address 10.1.0.6 255.255.255.252
  duplex full
  speed auto
  media-type rj45
 !
 interface GigabitEthernet0/2
  description to iosv-2
- ip address 10.0.0.10 255.255.255.252
- ip ospf cost 1
+ ip address 10.1.0.10 255.255.255.252
  duplex full
  speed auto
  media-type rj45
 !
 interface GigabitEthernet0/3
  description to iosv-4
- ip address 10.0.128.2 255.255.255.252
+ ip address 10.1.128.2 255.255.255.252
  duplex full
  speed auto
  media-type rj45
 !
 router ospf 65000
+ redistribute bgp 65000 metric-type 1 subnets
  passive-interface Loopback0
- network 10.0.0.8 0.0.0.3 area 55
+ network 10.1.0.6 0.0.0.1 area 55
+ network 10.1.0.8 0.0.0.3 area 55
  network 192.168.0.10 0.0.0.0 area 55
-!
-router ospf 1
 !
 router bgp 65000
  bgp router-id 192.168.0.10
  bgp log-neighbor-changes
- neighbor 10.0.0.5 remote-as 1
- neighbor 10.0.0.5 description eBGP to iosv-1
- neighbor 10.0.128.1 remote-as 12000
- neighbor 10.0.128.1 description eBGP to iosv-4
+ neighbor 10.1.0.5 remote-as 1
+ neighbor 10.1.0.5 description eBGP to iosv-1
+ neighbor 10.1.128.1 remote-as 12000
+ neighbor 10.1.128.1 description eBGP to iosv-4
  neighbor 192.168.0.9 remote-as 65000
  neighbor 192.168.0.9 description iBGP peer iosv-2
  neighbor 192.168.0.9 update-source Loopback0
  !
  address-family ipv4
-  network 10.0.0.8 mask 255.255.255.252
+  bgp redistribute-internal
+  network 10.1.0.0 mask 255.255.0.0
   network 192.168.0.10 mask 255.255.255.255
-  neighbor 10.0.0.5 activate
-  neighbor 10.0.0.5 send-community
-  neighbor 10.0.0.5 next-hop-self
-  neighbor 10.0.128.1 activate
-  neighbor 10.0.128.1 send-community
-  neighbor 10.0.128.1 next-hop-self
+  neighbor 10.1.0.5 activate
+  neighbor 10.1.0.5 send-community
+  neighbor 10.1.0.5 next-hop-self
+  neighbor 10.1.128.1 activate
+  neighbor 10.1.128.1 send-community
+  neighbor 10.1.128.1 next-hop-self
   neighbor 192.168.0.9 activate
   neighbor 192.168.0.9 next-hop-self
  exit-address-family
@@ -530,7 +533,7 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
-ip route 10.0.0.8 255.255.255.252 Null0 254
+ip route 10.1.0.0 255.255.0.0 Null0 254
 ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
 ip ssh server algorithm authentication password
 ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
@@ -584,17 +587,17 @@ end
 
 </entry>
         </extensions>
-        <interface id="0" name="GigabitEthernet0/1" ipv4="10.0.0.6" netPrefixLenV4="30"/>
-        <interface id="1" name="GigabitEthernet0/2" ipv4="10.0.0.10" netPrefixLenV4="30"/>
-        <interface id="2" name="GigabitEthernet0/3" ipv4="10.0.128.2" netPrefixLenV4="30"/>
+        <interface id="0" name="GigabitEthernet0/1" ipv4="10.1.0.6" netPrefixLenV4="30"/>
+        <interface id="1" name="GigabitEthernet0/2" ipv4="10.1.0.10" netPrefixLenV4="30"/>
+        <interface id="2" name="GigabitEthernet0/3" ipv4="10.1.128.2" netPrefixLenV4="30"/>
     </node>
-    <node name="iosv-4" type="SIMPLE" subtype="IOSv" location="91,129" ipv4="192.168.0.5">
+    <node name="iosv-4" type="SIMPLE" subtype="IOSv" location="191,132" ipv4="192.168.0.5">
         <extensions>
             <entry key="AutoNetkit.ibgp_role" type="String">Peer</entry>
             <entry key="AutoNetkit.ASN" type="Integer">12000</entry>
             <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
             <entry key="config" type="String">!
-! Last configuration change at 01:15:18 UTC Thu Nov 29 2018
+! Last configuration change at 13:45:58 UTC Mon Dec 3 2018
 !
 version 15.6
 service timestamps debug datetime msec
@@ -647,7 +650,7 @@ multilink bundle-name authenticated
 !
 !
 !
-username cisco privilege 15 secret 5 $1$OvWp$meLmheUtlHYKMOl6iK.Ui.
+username cisco privilege 15 secret 5 $1$m8xn$zjdmT348B9qN0UPePurUh1
 !
 redundancy
 !
@@ -672,47 +675,58 @@ interface Loopback0
 interface GigabitEthernet0/0
  description OOB Management
  vrf forwarding Mgmt-intf
- ip address 10.255.0.9 255.255.0.0
+ ip address 172.16.1.76 255.255.255.0
  duplex full
  speed auto
  media-type rj45
 !
 interface GigabitEthernet0/1
  description to iosv-2
- ip address 10.0.0.13 255.255.255.252
+ ip address 10.1.0.13 255.255.255.252
  duplex full
  speed auto
  media-type rj45
 !
 interface GigabitEthernet0/2
  description to iosv-3
- ip address 10.0.128.1 255.255.255.252
+ ip address 10.1.128.1 255.255.255.252
+ duplex full
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/3
+ description to lxc-routem-1
+ ip address 10.0.0.2 255.255.0.0
+ ip ospf cost 1
  duplex full
  speed auto
  media-type rj45
 !
 router ospf 12000
  passive-interface Loopback0
+ network 10.0.0.0 0.0.255.255 area 0
  network 192.168.0.5 0.0.0.0 area 0
 !
 router bgp 12000
  bgp router-id 192.168.0.5
  bgp log-neighbor-changes
- neighbor 10.0.0.14 remote-as 65000
- neighbor 10.0.0.14 description eBGP to iosv-2
- neighbor 10.0.128.2 remote-as 65000
- neighbor 10.0.128.2 description eBGP to iosv-3
+ neighbor 10.0.0.1 remote-as 1001
+ neighbor 10.0.0.1 description ROUTEM
+ neighbor 10.1.0.14 remote-as 65000
+ neighbor 10.1.0.14 description eBGP to iosv-2
+ neighbor 10.1.128.2 remote-as 65000
+ neighbor 10.1.128.2 description eBGP to iosv-3
  !
  address-family ipv4
-  network 10.0.0.12 mask 255.255.255.252
-  network 10.0.128.0 mask 255.255.255.252
+  network 10.0.0.0 mask 255.255.0.0
   network 192.168.0.5 mask 255.255.255.255
-  neighbor 10.0.0.14 activate
-  neighbor 10.0.0.14 send-community
-  neighbor 10.0.0.14 next-hop-self
-  neighbor 10.0.128.2 activate
-  neighbor 10.0.128.2 send-community
-  neighbor 10.0.128.2 next-hop-self
+  neighbor 10.0.0.1 activate
+  neighbor 10.1.0.14 activate
+  neighbor 10.1.0.14 send-community
+  neighbor 10.1.0.14 next-hop-self
+  neighbor 10.1.128.2 activate
+  neighbor 10.1.128.2 send-community
+  neighbor 10.1.128.2 next-hop-self
  exit-address-family
 !
 ip forward-protocol nd
@@ -720,8 +734,7 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
-ip route 10.0.0.12 255.255.255.252 Null0 254
-ip route 10.0.128.0 255.255.255.252 Null0 254
+ip route 10.0.0.0 255.255.0.0 Null0 254
 ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
 ip ssh server algorithm authentication password
 ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
@@ -775,13 +788,75 @@ end
 
 </entry>
         </extensions>
-        <interface id="0" name="GigabitEthernet0/1" ipv4="10.0.0.13" netPrefixLenV4="30"/>
-        <interface id="1" name="GigabitEthernet0/2" ipv4="10.0.128.1" netPrefixLenV4="30"/>
+        <interface id="0" name="GigabitEthernet0/1" ipv4="10.1.0.13" netPrefixLenV4="30"/>
+        <interface id="1" name="GigabitEthernet0/2" ipv4="10.1.128.1" netPrefixLenV4="30"/>
+        <interface id="2" name="GigabitEthernet0/3" ipv4="10.0.0.2" netPrefixLenV4="16"/>
     </node>
-    <annotations/>
+    <node name="lxc-routem-1" type="SIMPLE" subtype="lxc-routem" location="83,132">
+        <extensions>
+            <entry key="config" type="String">#cloud-config
+bootcmd:
+- ln -s -t /etc/rc.d /etc/rc.local
+hostname: lxc-routem-1
+manage_etc_hosts: true
+runcmd:
+- systemctl start rc-local
+- sed -i '/^\s*PasswordAuthentication\s\+no/d' /etc/ssh/sshd_config
+- echo "UseDNS no" &gt;&gt; /etc/ssh/sshd_config
+- service ssh restart
+- service sshd restart
+users:
+- default
+- gecos: User configured by VIRL Configuration Engine 0.23.10
+  lock-passwd: false
+  name: cisco
+  plain-text-passwd: cisco
+  shell: /bin/bash
+  ssh-authorized-keys:
+  - VIRL-USER-SSH-PUBLIC-KEY
+  sudo: ALL=(ALL) ALL
+write_files:
+- path: /etc/systemd/system/dhclient@.service
+  content: |
+    [Unit]
+    Description=Run dhclient on %i interface
+    After=network.target
+    [Service]
+    Type=oneshot
+    ExecStart=/sbin/dhclient %i -pf /var/run/dhclient.%i.pid -lf /var/lib/dhclient/dhclient.%i.lease
+    RemainAfterExit=yes
+  owner: root:root
+  permissions: '0644'
+- path: /etc/rc.local
+  owner: root:root
+  permissions: '0755'
+  content: |-
+    #!/bin/sh
+    ifconfig eth1 up 10.0.0.1 netmask 255.255.0.0
+    route add -host 192.168.0.5 gw 10.0.0.2 dev eth1
+    route add -host 192.168.0.1 gw 10.0.0.2 dev eth1
+    route add -host 192.168.0.9 gw 10.0.0.2 dev eth1
+    route add -host 192.168.0.10 gw 10.0.0.2 dev eth1
+    route add -net 10.0.0.0/16 gw 10.0.0.2 dev eth1
+    route add -net 10.1.0.0/16 gw 10.0.0.2 dev eth1
+    exit 0
+</entry>
+        </extensions>
+        <interface id="0" name="eth1" ipv4="10.0.0.1" netPrefixLenV4="16"/>
+    </node>
+    <annotations>
+        <rect x="353" y="48" radius="10" width="152" height="131" fill="CCCCCC" stroke-width="3"/>
+        <text x="397" y="49" font-size="18" fill="0000FF">OSPF</text>
+        <rect x="151" y="48" radius="10" width="168" height="132" fill="CCCCCC" stroke-width="3"/>
+        <text x="214" y="52" font-size="18" fill="0000FF">BGP</text>
+        <text x="402" y="77" font-size="8" fill="FF0000">E1</text>
+        <text x="403" y="153" font-size="8" fill="FF0000">E2</text>
+        <text x="393" y="88" font-size="8" fill="008080">$100</text>
+    </annotations>
     <connection dst="/virl:topology/virl:node[1]/virl:interface[1]" src="/virl:topology/virl:node[2]/virl:interface[1]"/>
     <connection dst="/virl:topology/virl:node[3]/virl:interface[1]" src="/virl:topology/virl:node[1]/virl:interface[2]"/>
     <connection dst="/virl:topology/virl:node[2]/virl:interface[2]" src="/virl:topology/virl:node[3]/virl:interface[2]"/>
     <connection dst="/virl:topology/virl:node[4]/virl:interface[1]" src="/virl:topology/virl:node[2]/virl:interface[3]"/>
     <connection dst="/virl:topology/virl:node[3]/virl:interface[3]" src="/virl:topology/virl:node[4]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[4]/virl:interface[3]" src="/virl:topology/virl:node[5]/virl:interface[1]"/>
 </topology>
