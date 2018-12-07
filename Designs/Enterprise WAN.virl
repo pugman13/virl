@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<topology xmlns="http://www.cisco.com/VIRL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="0.95" xsi:schemaLocation="http://www.cisco.com/VIRL https://raw.github.com/CiscoVIRL/schema/v0.95/virl.xsd">
+    <node name="iosxrv-1" type="SIMPLE" subtype="IOS XRv" location="701,288"/>
+    <node name="iosxrv-2" type="SIMPLE" subtype="IOS XRv" location="696,437"/>
+    <node name="iosxrv-3" type="SIMPLE" subtype="IOS XRv" location="835,268"/>
+    <node name="iosxrv-4" type="SIMPLE" subtype="IOS XRv" location="836,424"/>
+    <node name="CXREQDC2A" type="SIMPLE" subtype="NX-OSv" location="454,273"/>
+    <node name="CXREQDC2B" type="SIMPLE" subtype="NX-OSv" location="455,446"/>
+    <node name="lxc-routem-1" type="SIMPLE" subtype="lxc-routem" location="259,352"/>
+    <annotations/>
+</topology>
